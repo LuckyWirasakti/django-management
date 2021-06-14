@@ -1,0 +1,8 @@
+django_environ==0.4.5
+Django==3.2.4
+djangorestframework_simplejwt==4.7.1
+django_filter==2.4.0
+django_crum==0.7.9
+django_admin_rangefilter==0.8.1
+djangorestframework==3.12.4
+environ==1.0
