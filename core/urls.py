@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin 
 from django.urls import path, include
 from core.issue import urls as issue_urls
+from django.shortcuts import redirect
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('', lambda req: redirect('/backend/')),
     path('api/', include(issue_urls)),
+    path('backend/', admin.site.urls),
 ]
