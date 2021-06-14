@@ -6,3 +6,4 @@ django_crum==0.7.9
 django_admin_rangefilter==0.8.1
 djangorestframework==3.12.4
 environ==1.0
+gunicorn==20.1.0
