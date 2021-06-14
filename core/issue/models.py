@@ -1,6 +1,6 @@
+from core.storage_backends import PublicMediaStorage
 from django.db import models
 from crum import get_current_request
-from django.utils import timezone
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -40,7 +40,7 @@ class Card(models.Model):
     description = models.TextField(blank=True, null=True)
     priority = models.IntegerField(choices=CARD_PRIORITY)
     state = models.IntegerField(choices=CARD_STATE)
-    attachment = models.FileField(blank=True, null=True)
+    attachment = models.FileField(blank=True, null=True, storage=PublicMediaStorage())
     due_date = models.DateField(blank=True, null=True)
     assignee = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='assignee')
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner')
