@@ -173,7 +173,8 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "DATETIME_FORMAT": "%Y-%m-%d %H:%M:%S",
-    "PAGE_SIZE": 100
+    "SEARCH_PARAM": "q",
+    "PAGE_SIZE": 10
 }
 
 EMAIL_HOST = env("EMAIL_HOST")

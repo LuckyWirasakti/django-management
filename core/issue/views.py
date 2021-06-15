@@ -1,4 +1,5 @@
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, UpdateAPIView
+from rest_framework.filters import SearchFilter
 from core.issue.filters import CardByIssueFilterBackend, CommentByCardFilterBackend
 from core.issue.models import Card, Category, Comment
 from django_filters.rest_framework import DjangoFilterBackend
@@ -8,6 +9,14 @@ from core.issue.serializers import CardDetailSerializer, CardSerializer, Comment
 class IssueList(ListAPIView):
     serializer_class = IssueSerializer
     queryset = Category.objects.all()
+    filter_backends = [
+        SearchFilter,
+    ]
+    search_fields = [
+        "name",
+        "card__summary",
+        "card__description"
+    ]
     
 
 class IssueDetail(RetrieveAPIView):
