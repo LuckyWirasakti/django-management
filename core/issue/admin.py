@@ -1,12 +1,12 @@
 
-from core.issue.filters import TrashedListFilter, close_card, re_open_card, soft_delete_card, soft_delete_category
+from core.issue.filters import TrashedListFilter, close_card, re_open_card, soft_delete_card, soft_delete_project
 from django.contrib import admin
 
-from core.issue.models import Card, Category, Comment
+from core.issue.models import Card, Project, Comment
 from rangefilter.filters import DateRangeFilter
 
 
-class CategoryAdmin(admin.ModelAdmin):
+class ProjectAdmin(admin.ModelAdmin):
     fieldsets = (
         ("META", {
             "fields": (
@@ -16,7 +16,7 @@ class CategoryAdmin(admin.ModelAdmin):
                 "deleted_at"
             )
         }),
-        ("CATEGORY", {
+        ("PROJECT", {
             "fields": ("name",)
         })
     )
@@ -35,10 +35,11 @@ class CategoryAdmin(admin.ModelAdmin):
     readonly_fields = (
         "owner",
         "created_at",
-        "updated_at"
+        "updated_at",
+        "deleted_at",
     )
     actions = (
-        soft_delete_category,
+        soft_delete_project,
     )
     list_filter = (
         TrashedListFilter,
@@ -71,7 +72,7 @@ class CardAdmin(admin.ModelAdmin):
     )
     list_display = (
         "id",
-        "get_category",
+        "get_project",
         "summary",
         "priority",
         "state",
@@ -84,7 +85,7 @@ class CardAdmin(admin.ModelAdmin):
     list_filter = (
         ("created_at", DateRangeFilter),
         TrashedListFilter,
-        "category",
+        "project",
         "state",
         "priority",
     )
@@ -92,6 +93,7 @@ class CardAdmin(admin.ModelAdmin):
         "owner",
         "created_at",
         "updated_at",
+        "deleted_at",
     )
     inlines = (
         CommentInline,
@@ -106,7 +108,7 @@ class CardAdmin(admin.ModelAdmin):
             )
         }),
         ("NEW ISSUE IN", {
-            "fields": ("category",)
+            "fields": ("project",)
         }),
         ("CARD", {
             "fields": (
@@ -127,6 +129,11 @@ class CardAdmin(admin.ModelAdmin):
     )
     list_per_page = 10
 
-admin.site.register(Category, CategoryAdmin)
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "project":
+            kwargs["queryset"] = Project.objects.filter(deleted_at__isnull=True)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+admin.site.register(Project, ProjectAdmin)
 admin.site.register(Card, CardAdmin)
 

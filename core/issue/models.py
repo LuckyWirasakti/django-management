@@ -4,7 +4,7 @@ from crum import get_current_request
 from django.contrib.auth.models import User
 
 # Create your models here.
-class Category(models.Model):
+class Project(models.Model):
     name = models.CharField(max_length=191)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -13,15 +13,15 @@ class Category(models.Model):
 
     class Meta:
         ordering = ["-id","-created_at"]
-        verbose_name = "category"
-        verbose_name_plural = "categories"
+        verbose_name = "project"
+        verbose_name_plural = "projects"
 
     def __str__(self):
         return self.name
     
     def save(self, *args, **kwargs):
         self.owner = get_current_request().user
-        super(Category, self).save(*args, **kwargs)
+        super(Project, self).save(*args, **kwargs)
 
 class Card(models.Model):
     CARD_STATE = (
@@ -35,7 +35,7 @@ class Card(models.Model):
         (1, 'MEDIUM'),
         (2, 'HIGH'),
     )
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     summary = models.CharField(max_length=191)
     description = models.TextField(blank=True, null=True)
     priority = models.IntegerField(choices=CARD_PRIORITY)
@@ -54,11 +54,11 @@ class Card(models.Model):
         ordering = ["state","-priority"]
 
     def __str__(self):
-        return "{} - {}".format(self.category.name.upper(), self.id)
+        return "{} - {}".format(self.project.name.upper(), self.id)
 
-    def get_category(self):
-        return "{} - {}".format(self.category.name.upper(), self.id)
-    get_category.short_description = "category"
+    def get_project(self):
+        return "{} - {}".format(self.project.name.upper(), self.id)
+    get_project.short_description = "category"
 
     def save(self, *args, **kwargs):
         self.owner = get_current_request().user

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.issue.models import Card, Category, Comment
+from core.issue.models import Card, Project, Comment
 
 class CommentSerializer(serializers.ModelSerializer):
     card = serializers.StringRelatedField()
@@ -34,7 +34,7 @@ class CardDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
         exclude = [
-            "category"
+            "project"
         ]
         read_only_fields = [
             "summary",
@@ -49,7 +49,7 @@ class CardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Card
         exclude = [
-            "category"
+            "project"
         ]
         read_only_fields = [
             "summary",
@@ -68,11 +68,12 @@ class IssueCardSerializer(serializers.ModelSerializer):
 class IssueSerializer(serializers.ModelSerializer):
     card_set = IssueCardSerializer(many=True)
     class Meta:
-        model = Category
+        model = Project
         fields = [
             "id",
             "name",
             "card_set",
             "created_at",
-            "updated_at"
+            "updated_at",
+            "deleted_at"
         ]
